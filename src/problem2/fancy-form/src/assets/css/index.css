@@ -1,0 +1,110 @@
+@import 'tailwindcss';
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Light theme CSS variables */
+  --color-background: 255 255 255; /* white */
+  --color-foreground: 15 23 42; /* slate-900 */
+  --color-card: 255 255 255; /* white */
+  --color-card-foreground: 15 23 42; /* slate-900 */
+  --color-primary: 59 130 246; /* blue-500 */
+  --color-primary-foreground: 255 255 255; /* white */
+  --color-secondary: 241 245 249; /* slate-100 */
+  --color-secondary-foreground: 15 23 42; /* slate-900 */
+  --color-muted: 248 250 252; /* slate-50 */
+  --color-muted-foreground: 100 116 139; /* slate-500 */
+  --color-accent: 241 245 249; /* slate-100 */
+  --color-accent-foreground: 15 23 42; /* slate-900 */
+  --color-border: 226 232 240; /* slate-200 */
+  --color-input: 226 232 240; /* slate-200 */
+  --color-ring: 59 130 246; /* blue-500 */
+}
+
+/* Dark theme CSS variables */
+.dark {
+  --color-background: 2 6 23; /* slate-950 */
+  --color-foreground: 248 250 252; /* slate-50 */
+  --color-card: 15 23 42; /* slate-900 */
+  --color-card-foreground: 248 250 252; /* slate-50 */
+  --color-primary: 59 130 246; /* blue-500 */
+  --color-primary-foreground: 255 255 255; /* white */
+  --color-secondary: 30 41 59; /* slate-800 */
+  --color-secondary-foreground: 248 250 252; /* slate-50 */
+  --color-muted: 15 23 42; /* slate-900 */
+  --color-muted-foreground: 148 163 184; /* slate-400 */
+  --color-accent: 30 41 59; /* slate-800 */
+  --color-accent-foreground: 248 250 252; /* slate-50 */
+  --color-border: 30 41 59; /* slate-800 */
+  --color-input: 30 41 59; /* slate-800 */
+  --color-ring: 59 130 246; /* blue-500 */
+}
+
+/* Apply theme colors to html and body */
+html,
+body {
+  background-color: rgb(var(--color-background));
+  color: rgb(var(--color-foreground));
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+/* Ensure full height and smooth transitions */
+html,
+body,
+#root {
+  min-height: 100vh;
+  transition: all 0.3s ease;
+}
+
+a {
+  color: rgb(var(--color-primary));
+  font-weight: 500;
+  text-decoration: inherit;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: rgb(var(--color-primary) / 0.8);
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: rgb(var(--color-foreground));
+  transition: color 0.3s ease;
+}
+
+/* Remove default button styles - let TailwindCSS handle them */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid rgb(var(--color-ring));
+  outline-offset: 2px;
+}
