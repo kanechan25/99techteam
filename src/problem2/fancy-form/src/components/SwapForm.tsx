@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react'
-import { useAccount } from 'wagmi'
 import { toast } from 'react-toastify'
 import { Token } from '@/stores/tokens'
 import { useSwapStore } from '@/stores/swap'
 import { useSwapDefaults } from '@/hooks/useSwapDefaults'
 import { TokenSelectModal } from './TokenSelectModal'
+import { SwapSettingsModal } from './SwapSettingsModal'
 import { formatNumberInput, isValidAmount, formatDisplayAmount } from '@/utils/validation'
 
 interface SwapFormProps {
@@ -12,7 +12,6 @@ interface SwapFormProps {
 }
 
 export const SwapForm = ({ tokens }: SwapFormProps) => {
-  const { isConnected } = useAccount()
   useSwapDefaults(tokens)
   const {
     inputToken,
@@ -21,65 +20,118 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
     outputAmount,
     status,
     isLoading,
+    slippageTolerance,
+    mevProtection,
     setInputToken,
     setOutputToken,
     setInputAmount,
     setOutputAmount,
     setStatus,
     setLoading,
+    setSlippageTolerance,
+    setMevProtection,
     swapTokens,
     resetSwap,
   } = useSwapStore()
 
   const [showInputTokenModal, setShowInputTokenModal] = useState(false)
   const [showOutputTokenModal, setShowOutputTokenModal] = useState(false)
+  const [showSettingsModal, setShowSettingsModal] = useState(false)
+  const [lastChangedSide, setLastChangedSide] = useState<'input' | 'output'>('input')
+  const mockBalance = 1
 
-  // Calculate output amount when input changes
+  // Calculate amounts when input changes (bidirectional)
   useEffect(() => {
-    if (inputToken && outputToken && inputAmount && parseFloat(inputAmount) > 0) {
-      setStatus('finalizing')
-      setLoading(true)
+    if (inputToken && outputToken) {
+      // Only calculate if there's a valid amount on the changed side
+      const hasInputAmount = inputAmount !== '' && !isNaN(parseFloat(inputAmount))
+      const hasOutputAmount = outputAmount !== '' && !isNaN(parseFloat(outputAmount))
 
-      // Simulate API call delay
-      const timeout = setTimeout(() => {
-        const inputValue = parseFloat(inputAmount)
-        const exchangeRate = inputToken.price / outputToken.price
-        const outputValue = inputValue * exchangeRate
+      if (lastChangedSide === 'input' && hasInputAmount) {
+        setStatus('finalizing')
+        setLoading(true)
 
-        setOutputAmount(outputValue.toString())
-        setStatus('ready')
-        setLoading(false)
-      }, 500)
+        // Calculate output from input
+        const timeout = setTimeout(() => {
+          const inputValue = parseFloat(inputAmount)
+          const exchangeRate = inputToken.price / outputToken.price
+          const outputValue = inputValue * exchangeRate
 
-      return () => clearTimeout(timeout)
+          setOutputAmount(parseFloat(outputValue.toFixed(6)).toString())
+          setStatus('ready')
+          setLoading(false)
+        }, 500)
+
+        return () => clearTimeout(timeout)
+      } else if (lastChangedSide === 'output' && hasOutputAmount) {
+        setStatus('finalizing')
+        setLoading(true)
+
+        // Calculate input from output
+        const timeout = setTimeout(() => {
+          const outputValue = parseFloat(outputAmount)
+          const exchangeRate = outputToken.price / inputToken.price
+          const inputValue = outputValue * exchangeRate
+
+          setInputAmount(parseFloat(inputValue.toFixed(6)).toString())
+          setStatus('ready')
+          setLoading(false)
+        }, 500)
+
+        return () => clearTimeout(timeout)
+      } else if (!hasInputAmount && !hasOutputAmount) {
+        setStatus('idle')
+      }
     } else {
-      setOutputAmount('')
+      if (lastChangedSide === 'input') {
+        setOutputAmount('')
+      } else {
+        setInputAmount('')
+      }
       setStatus('idle')
     }
-  }, [inputToken, outputToken, inputAmount, setOutputAmount, setStatus, setLoading])
+  }, [
+    inputToken,
+    outputToken,
+    inputAmount,
+    outputAmount,
+    lastChangedSide,
+    setInputAmount,
+    setOutputAmount,
+    setStatus,
+    setLoading,
+  ])
 
   const handleInputAmountChange = (value: string) => {
     const formatted = formatNumberInput(value)
     setInputAmount(formatted)
+    setLastChangedSide('input')
   }
 
-  const handleMaxClick = () => {
+  const handleOutputAmountChange = (value: string) => {
+    const formatted = formatNumberInput(value)
+    setOutputAmount(formatted)
+    setLastChangedSide('output')
+  }
+
+  const handleMaxClick = (side: 'input' | 'output') => {
     // Simulate max balance - using a mock value
-    setInputAmount('1000')
+    if (side === 'input') {
+      setInputAmount(mockBalance.toFixed(2).toString())
+      setLastChangedSide('input')
+    } else {
+      setOutputAmount(mockBalance.toFixed(2).toString())
+      setLastChangedSide('output')
+    }
   }
 
   const handleSwap = async () => {
-    if (!isConnected) {
-      toast.error('Please connect your wallet first')
-      return
-    }
-
     if (!inputToken || !outputToken) {
       toast.error('Please select both tokens')
       return
     }
 
-    if (!isValidAmount(inputAmount)) {
+    if (!isValidAmount(inputAmount) && !isValidAmount(outputAmount)) {
       toast.error('Please enter a valid amount')
       return
     }
@@ -92,14 +144,16 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
       await new Promise((resolve) => setTimeout(resolve, 2000))
 
       setStatus('success')
+      const displayInputAmount = formatDisplayAmount(inputAmount, 4)
+      const displayOutputAmount = formatDisplayAmount(outputAmount, 4)
       toast.success(
-        `Successfully swapped ${inputAmount} ${inputToken.currency} for ${formatDisplayAmount(outputAmount, 4)} ${outputToken.currency}`,
+        `Successfully swapped ${displayInputAmount} ${inputToken.currency} for ${displayOutputAmount} ${outputToken.currency}`,
       )
 
       // Reset after success
       setTimeout(() => {
         resetSwap()
-      }, 1000)
+      }, 600)
     } catch {
       setStatus('error')
       toast.error('Swap failed. Please try again.')
@@ -108,9 +162,10 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
   }
 
   const getButtonText = () => {
-    if (!isConnected) return 'Connect wallet'
     if (!inputToken || !outputToken) return 'Select tokens'
-    if (!inputAmount || parseFloat(inputAmount) <= 0) return 'Enter an amount'
+    const hasValidInput = inputAmount !== '' && !isNaN(parseFloat(inputAmount)) && parseFloat(inputAmount) > 0
+    const hasValidOutput = outputAmount !== '' && !isNaN(parseFloat(outputAmount)) && parseFloat(outputAmount) > 0
+    if (!hasValidInput && !hasValidOutput) return 'Enter an amount'
     if (status === 'finalizing') return 'Finalizing quote...'
     if (status === 'swapping') return 'Swapping...'
     if (status === 'success') return 'Swap Successful!'
@@ -118,37 +173,74 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
   }
 
   const isButtonDisabled = () => {
-    if (!isConnected) return false // Allow clicking to connect
     if (status === 'swapping' || status === 'success') return true
-    if (!inputToken || !outputToken || !isValidAmount(inputAmount)) return true
+    if (!inputToken || !outputToken) return true
+    const hasValidInput = inputAmount !== '' && !isNaN(parseFloat(inputAmount)) && parseFloat(inputAmount) > 0
+    const hasValidOutput = outputAmount !== '' && !isNaN(parseFloat(outputAmount)) && parseFloat(outputAmount) > 0
+    if (!hasValidInput && !hasValidOutput) return true
     return false
   }
 
   return (
-    <div className='w-full max-w-md mx-auto'>
-      <div className='bg-background border border-border rounded-2xl p-4 space-y-4'>
+    <div className='w-full relative max-w-md mx-auto'>
+      {/* Settings Button */}
+      <div className='bg-background border border-border rounded-2xl p-4 pt-8 space-y-4 relative'>
+        <div
+          onClick={() => setShowSettingsModal(true)}
+          className='absolute top-2 right-2 p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/50 cursor-pointer'
+        >
+          <svg width='20' height='20' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+            <path
+              d='M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z'
+              stroke='currentColor'
+              strokeWidth='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+            <path
+              d='M15 12a3 3 0 11-6 0 3 3 0 016 0z'
+              stroke='currentColor'
+              strokeWidth='2'
+              strokeLinecap='round'
+              strokeLinejoin='round'
+            />
+          </svg>
+        </div>
         {/* Input Token Section */}
         <div className='bg-muted rounded-xl p-4'>
           <div className='flex justify-between items-center mb-2'>
             <span className='text-sm text-muted-foreground font-medium'>Sell</span>
             {inputToken && (
               <div className='flex items-center text-sm text-muted-foreground'>
-                <span>0.001 {inputToken.currency}</span>
-                <button onClick={handleMaxClick} className='ml-2 text-blue-500 hover:text-blue-600 font-medium'>
+                <span>
+                  {mockBalance.toFixed(2)} {inputToken.currency}
+                </span>
+                <div
+                  onClick={() => handleMaxClick('input')}
+                  className='ml-2 text-blue-500 hover:text-blue-600 font-bold cursor-pointer'
+                >
                   Max
-                </button>
+                </div>
               </div>
             )}
           </div>
 
           <div className='flex items-center justify-between'>
-            <input
-              type='text'
-              value={inputAmount}
-              onChange={(e) => handleInputAmountChange(e.target.value)}
-              placeholder='0'
-              className='bg-transparent text-left text-4xl font-bold text-foreground placeholder-muted-foreground border-none outline-none flex-1 min-w-0'
-            />
+            <div className='flex-1 relative'>
+              {status === 'finalizing' && isLoading && lastChangedSide === 'output' ? (
+                <div className='flex items-center space-x-2 text-3xl font-bold text-foreground'>
+                  <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-foreground'></div>
+                </div>
+              ) : (
+                <input
+                  type='text'
+                  value={inputAmount}
+                  onChange={(e) => handleInputAmountChange(e.target.value)}
+                  placeholder='0'
+                  className='bg-transparent text-left text-3xl font-bold text-foreground placeholder-muted-foreground border-none outline-none w-full'
+                />
+              )}
+            </div>
 
             <button
               onClick={() => setShowInputTokenModal(true)}
@@ -201,18 +293,35 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
         <div className='bg-muted rounded-xl p-4'>
           <div className='flex justify-between items-center mb-2'>
             <span className='text-sm text-muted-foreground font-medium'>Buy</span>
+            {outputToken && (
+              <div className='flex items-center text-sm text-muted-foreground'>
+                <span>
+                  {mockBalance.toFixed(2)} {outputToken.currency}
+                </span>
+                <div
+                  onClick={() => handleMaxClick('output')}
+                  className='ml-2 text-blue-500 hover:text-blue-600 font-bold cursor-pointer'
+                >
+                  Max
+                </div>
+              </div>
+            )}
           </div>
 
           <div className='flex items-center justify-between'>
-            <div className='text-left text-4xl font-bold text-foreground flex-1'>
-              {status === 'finalizing' && isLoading ? (
-                <div className='flex items-center space-x-2'>
+            <div className='flex-1 relative'>
+              {status === 'finalizing' && isLoading && lastChangedSide === 'input' ? (
+                <div className='flex items-center space-x-2 text-3xl font-bold text-foreground'>
                   <div className='animate-spin rounded-full h-6 w-6 border-b-2 border-foreground'></div>
                 </div>
-              ) : outputAmount ? (
-                formatDisplayAmount(outputAmount, 6)
               ) : (
-                '0'
+                <input
+                  type='text'
+                  value={outputAmount}
+                  onChange={(e) => handleOutputAmountChange(e.target.value)}
+                  placeholder='0'
+                  className='bg-transparent text-left text-3xl font-bold text-foreground placeholder-muted-foreground border-none outline-none w-full'
+                />
               )}
             </div>
 
@@ -246,14 +355,15 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
         </div>
 
         {/* Finalizing Quote */}
-        {status === 'finalizing' && (
+        {status === 'finalizing' && isLoading && (
           <div className='flex items-center justify-center space-x-2 text-sm text-muted-foreground'>
             <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-current'></div>
-            <span>Finalizing quote...</span>
+            <span>{lastChangedSide === 'input' ? 'Calculating output amount...' : 'Calculating input amount...'}</span>
           </div>
         )}
 
         {/* Swap Button */}
+
         <button
           onClick={handleSwap}
           disabled={isButtonDisabled()}
@@ -262,11 +372,7 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
               ? 'bg-green-600 text-white'
               : status === 'swapping'
                 ? 'bg-blue-600 text-white'
-                : !isConnected
-                  ? 'bg-purple-600 hover:bg-purple-700 text-white'
-                  : isButtonDisabled()
-                    ? 'bg-muted text-muted-foreground cursor-not-allowed'
-                    : 'bg-blue-600 hover:bg-blue-700 text-white'
+                : 'bg-blue-600 hover:bg-blue-700 text-white'
           }`}
         >
           {getButtonText()}
@@ -290,6 +396,16 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
         onSelectToken={setOutputToken}
         disabledToken={inputToken}
         title='Select a token'
+      />
+
+      {/* Settings Modal */}
+      <SwapSettingsModal
+        isOpen={showSettingsModal}
+        onClose={() => setShowSettingsModal(false)}
+        slippageTolerance={slippageTolerance}
+        onSlippageChange={setSlippageTolerance}
+        mevProtection={mevProtection}
+        onMevProtectionChange={setMevProtection}
       />
     </div>
   )

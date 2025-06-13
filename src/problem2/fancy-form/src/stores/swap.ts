@@ -11,6 +11,8 @@ interface SwapStore {
   status: SwapStatus
   isLoading: boolean
   error: string | null
+  slippageTolerance: number
+  mevProtection: boolean
 
   setInputToken: (token: Token | null) => void
   setOutputToken: (token: Token | null) => void
@@ -19,6 +21,8 @@ interface SwapStore {
   setStatus: (status: SwapStatus) => void
   setLoading: (loading: boolean) => void
   setError: (error: string | null) => void
+  setSlippageTolerance: (tolerance: number) => void
+  setMevProtection: (enabled: boolean) => void
   swapTokens: () => void
   resetSwap: () => void
 }
@@ -31,6 +35,8 @@ export const useSwapStore = create<SwapStore>((set, get) => ({
   status: 'idle',
   isLoading: false,
   error: null,
+  slippageTolerance: 5.0,
+  mevProtection: false,
 
   setInputToken: (token) => set({ inputToken: token }),
   setOutputToken: (token) => set({ outputToken: token }),
@@ -39,6 +45,8 @@ export const useSwapStore = create<SwapStore>((set, get) => ({
   setStatus: (status) => set({ status }),
   setLoading: (loading) => set({ isLoading: loading }),
   setError: (error) => set({ error }),
+  setSlippageTolerance: (tolerance) => set({ slippageTolerance: tolerance }),
+  setMevProtection: (enabled) => set({ mevProtection: enabled }),
 
   swapTokens: () => {
     const { inputToken, outputToken } = get()
