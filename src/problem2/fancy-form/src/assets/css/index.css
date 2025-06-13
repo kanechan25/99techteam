@@ -41,7 +41,7 @@
   --color-muted-foreground: 148 163 184; /* slate-400 */
   --color-accent: 30 41 59; /* slate-800 */
   --color-accent-foreground: 248 250 252; /* slate-50 */
-  --color-border: 30 41 59; /* slate-800 */
+  --color-border: 71 85 105; /* slate-600 - lighter for better visibility */
   --color-input: 30 41 59; /* slate-800 */
   --color-ring: 59 130 246; /* blue-500 */
 }
@@ -94,7 +94,7 @@ h6 {
 /* Remove default button styles - let TailwindCSS handle them */
 button {
   border-radius: 8px;
-  border: 1px solid transparent;
+  border: 1px solid green;
   padding: 0.6em 1.2em;
   font-size: 1em;
   font-weight: 500;
