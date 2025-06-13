@@ -1,9 +1,7 @@
 import { ThemeToggle } from '@/components/ThemeToggle'
-import { useTheme } from '@/hooks/useTheme'
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 export const Header = () => {
-  const { theme } = useTheme()
-
   return (
     <header className='flex justify-between items-center p-6 border-b border-border'>
       <div>
@@ -13,9 +11,10 @@ export const Header = () => {
         </div>
       </div>
 
-      {/* Theme Toggle Buttons */}
+      {/* Connect Wallet and Theme Toggle Buttons */}
       <div className='flex items-center gap-3'>
         <ThemeToggle />
+        <ConnectButton />
       </div>
     </header>
   )

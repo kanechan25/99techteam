@@ -1,4 +1,3 @@
-import { Counter } from '@/components/Counter/Counter'
 import { Header } from '@/components/Header'
 import useTokens from '@/hooks/useTokens'
 
@@ -10,11 +9,6 @@ export default function Home() {
       <Header />
       <main className='container mx-auto px-6 py-8'>
         <div className='space-y-8'>
-          <section className='bg-muted rounded-lg p-6 transition-colors duration-300'>
-            <h3 className='text-xl font-semibold text-foreground mb-4'>Counter Component</h3>
-            <Counter />
-          </section>
-
           <section className='bg-muted rounded-lg p-6 transition-colors duration-300'>
             <h3 className='text-xl font-semibold text-foreground mb-4'>Token Prices</h3>
 

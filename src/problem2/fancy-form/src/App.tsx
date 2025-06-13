@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { CounterStoreProvider } from '@/provider/counterProvider'
 import { QueryProvider } from '@/provider/queryProvider'
 import { ThemeProvider } from '@/provider/themeProvider'
+import { Web3Provider } from '@/provider/web3Provider'
 import { routers } from '@/routes/routes'
 import './assets/css/App.css'
 
@@ -9,7 +9,7 @@ function App() {
   return (
     <ThemeProvider>
       <QueryProvider>
-        <CounterStoreProvider>
+        <Web3Provider>
           <BrowserRouter>
             <Routes>
               <Route>
@@ -20,7 +20,7 @@ function App() {
               </Route>
             </Routes>
           </BrowserRouter>
-        </CounterStoreProvider>
+        </Web3Provider>
       </QueryProvider>
     </ThemeProvider>
   )
