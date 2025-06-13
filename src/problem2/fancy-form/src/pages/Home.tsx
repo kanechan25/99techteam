@@ -10,7 +10,6 @@ export default function Home() {
       <Header />
       <main className='container mx-auto px-6 py-8'>
         <div className='space-y-8'>
-          {/* Swap Section */}
           <section className='flex justify-center'>
             <div className='w-full max-w-md'>
               <h2 className='text-2xl font-bold text-center mb-6'>Swap Tokens</h2>

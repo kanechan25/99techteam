@@ -37,9 +37,9 @@ export const SwapSettingsModal = ({
       <div className='absolute inset-0 bg-black/80 backdrop-blur-sm' onClick={onClose} />
 
       {/* Modal */}
-      <div className='relative bg-background border border-border rounded-2xl w-full max-w-md mx-4 shadow-2xl'>
+      <div className='relative bg-background/95 backdrop-blur-xl border border-border/50 border-[#5c5656] rounded-2xl w-full max-w-md mx-4 shadow-2xl shadow-black/50 dark:shadow-white/20 ring-1 ring-white/20 dark:ring-white/30 drop-shadow-2xl transform transition-all duration-300 scale-100 hover:scale-[1.02] dark:shadow-[0_25px_50px_-12px_rgba(255,255,255,0.25)]'>
         {/* Header */}
-        <div className='flex items-center justify-between p-6 border-b border-border'>
+        <div className='flex items-center justify-between p-6 border-b border-border border-[#5c5656]'>
           <h2 className='text-xl font-semibold text-foreground'>Settings</h2>
           <button onClick={onClose} className='text-muted-foreground hover:text-foreground transition-colors p-1'>
             <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
@@ -70,10 +70,10 @@ export const SwapSettingsModal = ({
                     onSlippageChange(preset)
                     setCustomSlippage('')
                   }}
-                  className={`rounded-lg transition-colors ${
+                  className={`py-2 px-3 rounded-lg transition-all duration-200 transform font-medium ${
                     slippageTolerance === preset && !customSlippage
-                      ? 'bg-yellow-500 text-black'
-                      : 'bg-muted text-foreground hover:bg-muted/80'
+                      ? 'bg-gradient-to-r from-yellow-400 to-yellow-500 text-black shadow-lg shadow-yellow-500/30 dark:shadow-yellow-400/40 scale-105 drop-shadow-lg'
+                      : 'bg-muted text-foreground hover:bg-gradient-to-r hover:from-yellow-400/20 hover:to-yellow-500/20 hover:shadow-lg hover:shadow-yellow-500/20 dark:hover:shadow-yellow-400/30 hover:scale-105 hover:text-yellow-300 drop-shadow-md'
                   }`}
                 >
                   {preset}%
@@ -101,7 +101,7 @@ export const SwapSettingsModal = ({
           </div>
 
           {/* MEV Guard Protection */}
-          <div className='border-t border-border pt-6'>
+          <div className='border-t border-border border-[#5c5656] pt-6'>
             <div className='flex items-center justify-between mb-3'>
               <div className='flex items-center space-x-3'>
                 <div className='p-2 bg-muted rounded-lg'>

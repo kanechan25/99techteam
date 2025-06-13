@@ -27,7 +27,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
       <svg
         className={`
           absolute h-5 w-5 text-yellow-500 transition-all duration-300 ease-in-out
-          ${theme === 'dark' ? 'rotate-90 scale-0 opacity-0' : 'rotate-0 scale-100 opacity-100'}
+          ${theme === 'light' ? 'rotate-90 scale-0 opacity-0' : 'rotate-0 scale-100 opacity-100'}
         `}
         fill='none'
         stroke='currentColor'
@@ -46,7 +46,7 @@ export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
       <svg
         className={`
           absolute h-5 w-5 text-blue-400 transition-all duration-300 ease-in-out
-          ${theme === 'light' ? '-rotate-90 scale-0 opacity-0' : 'rotate-0 scale-100 opacity-100'}
+          ${theme === 'dark' ? '-rotate-90 scale-0 opacity-0' : 'rotate-0 scale-100 opacity-100'}
         `}
         fill='none'
         stroke='currentColor'

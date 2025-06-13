@@ -3,7 +3,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 export const Header = () => {
   return (
-    <header className='flex justify-between items-center p-6 border-b border-border'>
+    <header className='flex justify-between items-center p-6 border-b border-border border-[#4c5a6d] dark:border-[#475569]'>
       <div>
         <h1 className='text-2xl font-bold text-foreground'>Fancy Form</h1>
         <div className='text-sm text-muted-foreground mt-1'>
