@@ -12,7 +12,9 @@ export default function Home() {
         <div className='space-y-8'>
           <section className='flex justify-center'>
             <div className='w-full max-w-md'>
-              <h2 className='text-2xl font-bold text-center mb-6'>Swap Tokens</h2>
+              <h2 className='text-2xl font-bold text-center text-foreground tracking-wider uppercase text-shadow-lg mb-6'>
+                Swap Tokens
+              </h2>
               {isLoading ? (
                 <div className='flex items-center justify-center py-12'>
                   <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-foreground'></div>

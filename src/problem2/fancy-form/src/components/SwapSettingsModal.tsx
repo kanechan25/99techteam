@@ -1,3 +1,4 @@
+import { useTheme } from '@/provider/themeProvider'
 import { useState } from 'react'
 
 interface SwapSettingsModalProps {
@@ -18,7 +19,7 @@ export const SwapSettingsModal = ({
   onMevProtectionChange,
 }: SwapSettingsModalProps) => {
   const [customSlippage, setCustomSlippage] = useState('')
-
+  const { theme } = useTheme()
   const presetSlippages = [0.5, 1.0, 5.0]
 
   const handleCustomSlippageChange = (value: string) => {
@@ -37,10 +38,14 @@ export const SwapSettingsModal = ({
       <div className='absolute inset-0 bg-black/80 backdrop-blur-sm' onClick={onClose} />
 
       {/* Modal */}
-      <div className='relative bg-background/95 backdrop-blur-xl border border-border/50 border-[#5c5656] rounded-2xl w-full max-w-md mx-4 shadow-2xl shadow-black/50 dark:shadow-white/20 ring-1 ring-white/20 dark:ring-white/30 drop-shadow-2xl transform transition-all duration-300 scale-100 hover:scale-[1.02] dark:shadow-[0_25px_50px_-12px_rgba(255,255,255,0.25)]'>
+      <div
+        className={`relative backdrop-blur-xl border-[#5c5656] rounded-2xl w-full max-w-md mx-4 shadow-2xl shadow-black/50 dark:shadow-white/20 ring-1 ring-white/20 dark:ring-white/30 drop-shadow-2xl transform transition-all duration-300 scale-100 hover:scale-[1.02] dark:shadow-[0_25px_50px_-12px_rgba(255,255,255,0.25)] ${
+          theme === 'dark' ? 'bg-slate-900/95 border-slate-600' : 'bg-white/95 border-slate-300'
+        }`}
+      >
         {/* Header */}
         <div className='flex items-center justify-between p-6 border-b border-border border-[#5c5656]'>
-          <h2 className='text-xl font-semibold text-foreground'>Settings</h2>
+          <h2 className='text-xl font-semibold text-foreground tracking-wider uppercase text-shadow-lg'>Settings</h2>
           <button onClick={onClose} className='text-muted-foreground hover:text-foreground transition-colors p-1'>
             <svg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
               <path
@@ -58,7 +63,7 @@ export const SwapSettingsModal = ({
           {/* Slippage Tolerance */}
           <div>
             <div className='flex items-center justify-between mb-4'>
-              <h3 className='text-lg font-medium text-foreground'>Slippage Tolerance</h3>
+              <h3 className='text-lg font-medium text-foreground tracking-wider text-shadow-lg'>Slippage Tolerance</h3>
               <span className='text-yellow-500 font-semibold'>{slippageTolerance}%</span>
             </div>
 
@@ -113,7 +118,9 @@ export const SwapSettingsModal = ({
                   </svg>
                 </div>
                 <div>
-                  <h3 className='text-lg font-medium text-foreground'>MEV Guard Protection</h3>
+                  <h3 className='text-lg font-medium text-foreground tracking-wider text-shadow-lg'>
+                    MEV Guard Protection
+                  </h3>
                 </div>
               </div>
 
@@ -124,7 +131,7 @@ export const SwapSettingsModal = ({
                 }`}
               >
                 <span
-                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  className={`inline-block h-4 w-4 transform rounded-full bg-[#999] transition-transform ${
                     mevProtection ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />

@@ -6,6 +6,7 @@ import { useSwapDefaults } from '@/hooks/useSwapDefaults'
 import { TokenSelectModal } from './TokenSelectModal'
 import { SwapSettingsModal } from './SwapSettingsModal'
 import { formatNumberInput, isValidAmount, formatDisplayAmount } from '@/utils/validation'
+import { useTheme } from '@/hooks/useTheme'
 
 interface SwapFormProps {
   tokens: Token[]
@@ -33,6 +34,7 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
     swapTokens,
     resetSwap,
   } = useSwapStore()
+  const { theme } = useTheme()
 
   const handleSwapTokens = () => {
     swapTokens()
@@ -190,7 +192,11 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
   return (
     <div className='w-full relative max-w-md mx-auto '>
       {/* Settings Button */}
-      <div className='bg-background/95 backdrop-blur-lg border border-border/50 border-[#5c5656] rounded-2xl p-4 pt-14 space-y-4 relative shadow-2xl shadow-black/30 dark:shadow-white/10 ring-1 ring-white/10 dark:ring-white/20 drop-shadow-2xl'>
+      <div
+        className={`backdrop-blur-lg rounded-2xl p-4 pt-14 space-y-4 relative shadow-2xl shadow-black/30 dark:shadow-white/10 ring-1 ring-white/10 dark:ring-white/20 drop-shadow-2xl ${
+          theme === 'dark' ? 'bg-slate-900/95' : 'bg-white/95 border-slate-300'
+        }`}
+      >
         <div
           onClick={() => setShowSettingsModal(true)}
           className='absolute top-2 right-2 p-2 text-muted-foreground hover:text-foreground transition-all duration-300 rounded-lg hover:bg-gradient-to-r hover:from-blue-500/10 hover:to-purple-500/10 hover:shadow-lg hover:shadow-blue-500/20 dark:hover:shadow-blue-400/30 hover:scale-110 cursor-pointer backdrop-blur-sm drop-shadow-md'
@@ -215,7 +221,9 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
         {/* Input Token Section */}
         <div className='bg-gradient-to-br from-blue-50/10 to-indigo-100/20 dark:from-blue-900/20 dark:to-indigo-800/30 backdrop-blur-sm border border-blue-200/30 dark:border-blue-700/30 rounded-xl p-4 shadow-lg shadow-blue-500/10 dark:shadow-blue-400/20 drop-shadow-lg'>
           <div className='flex justify-between items-center mb-2'>
-            <span className='text-sm text-muted-foreground font-medium'>Sell</span>
+            <span className='text-sm text-muted-foreground text-red-500 font-bold text-foreground tracking-wider uppercase text-shadow-lg'>
+              Sell
+            </span>
             {inputToken && (
               <div className='flex items-center text-sm text-muted-foreground'>
                 <span>
@@ -243,7 +251,7 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
                   value={inputAmount}
                   onChange={(e) => handleInputAmountChange(e.target.value)}
                   placeholder='0'
-                  className='bg-transparent text-left text-3xl font-bold text-foreground placeholder-muted-foreground border-none outline-none w-full'
+                  className='bg-transparent text-left text-3xl font-bold text-primary placeholder-muted-background border-none outline-none w-full'
                 />
               )}
             </div>
@@ -306,7 +314,9 @@ export const SwapForm = ({ tokens }: SwapFormProps) => {
         {/* Output Token Section */}
         <div className='bg-gradient-to-br from-emerald-50/10 to-green-100/20 dark:from-emerald-900/20 dark:to-green-800/30 backdrop-blur-sm border border-emerald-200/30 dark:border-emerald-700/30 rounded-xl p-4 shadow-lg shadow-emerald-500/10 dark:shadow-emerald-400/20 drop-shadow-lg'>
           <div className='flex justify-between items-center mb-2'>
-            <span className='text-sm text-muted-foreground font-medium'>Buy</span>
+            <span className='text-sm text-muted-foreground text-green-600 font-bold text-foreground tracking-wider uppercase text-shadow-lg'>
+              Buy
+            </span>
             {outputToken && (
               <div className='flex items-center text-sm text-muted-foreground'>
                 <span>
