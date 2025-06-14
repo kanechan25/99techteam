@@ -10,7 +10,7 @@
 - Functional reduce approach O(n)
 
 ## Problem 2: Fancy Form
-
+**Demo:** [Currency Swap App Demo Link](https://99techteam.vercel.app/)   
 **Tech Stack:** React + TypeScript + Vite + TailwindCSS  
 **Task:** Build a **Currency Swap App** with proper validation and UI/UX
 
