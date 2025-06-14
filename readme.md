@@ -1,11 +1,29 @@
-# 99Tech Code Challenge
+# 99Tech Challenge - Problem Solutions
 
-Note that if you fork this repository, your responses may be publicly linked to this repo.  
-Please submit your application along with the solutions attached or linked.
+## Problem 1: Sum to `n`
 
-It is important that you minimally attempt the problems, even if you do not arrive at a working solution.
+**Language:** JavaScript  
+**Task:** Implement 3 different ways to compute sum of integers from 1 to n
 
-## Submission
+- Math formula approach O(1)
+- For loop approach O(n)
+- Functional reduce approach O(n)
 
-You can either provide a link to an online repository, attach the solution in your application, or whichever method you prefer.
-We're cool as long as we can view your solution without any pain.
+## Problem 2: Fancy Form
+
+**Tech Stack:** React + TypeScript + Vite + TailwindCSS  
+**Task:** Build a **Currency Swap App** with proper validation and UI/UX
+
+- Complete React form implementation
+- TypeScript types and validation
+- TailwindCSS styling
+
+## Problem 3: Code Refactor
+
+**Language:** TypeScript/React  
+**Task:** Refactor buggy WalletPage component with 13+ critical issues
+
+- Fix type safety flaws (missing blockchain property, undefined variables)
+- Resolve logic bugs (inverted filter, NaN calculations)
+- Optimize performance (useMemo dependencies, function recreation)
+- Improve code quality (proper keys, formatting, extensibility)

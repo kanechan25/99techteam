@@ -1,8 +1,5 @@
 import { useTheme } from '@/provider/themeProvider'
-
-interface ThemeToggleProps {
-  className?: string
-}
+import { ThemeToggleProps } from '@/models/types'
 
 export const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '' }) => {
   const { theme, toggleTheme } = useTheme()

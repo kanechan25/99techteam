@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Token } from '@/stores/tokens'
+import { Token } from '@/models/types'
 import { useSwapStore } from '@/stores/swap'
 
 export const useSwapDefaults = (tokens: Token[]) => {

@@ -2,7 +2,7 @@ import '@rainbow-me/rainbowkit/styles.css'
 import { getDefaultConfig, RainbowKitProvider, darkTheme } from '@rainbow-me/rainbowkit'
 import { WagmiProvider } from 'wagmi'
 import { mainnet, bsc } from 'wagmi/chains'
-import { ReactNode } from 'react'
+import { Web3ProviderProps } from '@/models/types'
 
 const config = getDefaultConfig({
   appName: 'Fancy Form',
@@ -10,10 +10,6 @@ const config = getDefaultConfig({
   chains: [mainnet, bsc],
   ssr: false,
 })
-
-interface Web3ProviderProps {
-  children: ReactNode
-}
 
 export const Web3Provider = ({ children }: Web3ProviderProps) => {
   return (

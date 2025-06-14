@@ -1,16 +1,12 @@
 import { useState, useEffect } from 'react'
 import { toast } from 'react-toastify'
-import { Token } from '@/stores/tokens'
 import { useSwapStore } from '@/stores/swap'
 import { useSwapDefaults } from '@/hooks/useSwapDefaults'
 import { TokenSelectModal } from './TokenSelectModal'
 import { SwapSettingsModal } from './SwapSettingsModal'
 import { formatNumberInput, isValidAmount, formatDisplayAmount } from '@/utils/validation'
 import { useTheme } from '@/hooks/useTheme'
-
-interface SwapFormProps {
-  tokens: Token[]
-}
+import { SwapFormProps } from '@/models/types'
 
 export const SwapForm = ({ tokens }: SwapFormProps) => {
   useSwapDefaults(tokens)

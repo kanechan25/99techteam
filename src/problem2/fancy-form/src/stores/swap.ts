@@ -1,31 +1,5 @@
 import { create } from 'zustand'
-import { Token } from './tokens'
-
-export type SwapStatus = 'idle' | 'finalizing' | 'ready' | 'swapping' | 'success' | 'error'
-
-interface SwapStore {
-  inputToken: Token | null
-  outputToken: Token | null
-  inputAmount: string
-  outputAmount: string
-  status: SwapStatus
-  isLoading: boolean
-  error: string | null
-  slippageTolerance: number
-  mevProtection: boolean
-
-  setInputToken: (token: Token | null) => void
-  setOutputToken: (token: Token | null) => void
-  setInputAmount: (amount: string) => void
-  setOutputAmount: (amount: string) => void
-  setStatus: (status: SwapStatus) => void
-  setLoading: (loading: boolean) => void
-  setError: (error: string | null) => void
-  setSlippageTolerance: (tolerance: number) => void
-  setMevProtection: (enabled: boolean) => void
-  swapTokens: () => void
-  resetSwap: () => void
-}
+import { SwapStore } from '@/models/types'
 
 export const useSwapStore = create<SwapStore>((set, get) => ({
   inputToken: null,

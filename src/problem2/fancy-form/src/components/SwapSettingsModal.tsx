@@ -1,14 +1,6 @@
 import { useTheme } from '@/provider/themeProvider'
 import { useState } from 'react'
-
-interface SwapSettingsModalProps {
-  isOpen: boolean
-  onClose: () => void
-  slippageTolerance: number
-  onSlippageChange: (value: number) => void
-  mevProtection: boolean
-  onMevProtectionChange: (enabled: boolean) => void
-}
+import { SwapSettingsModalProps } from '@/models/types'
 
 export const SwapSettingsModal = ({
   isOpen,

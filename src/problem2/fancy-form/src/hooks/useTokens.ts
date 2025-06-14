@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { fetchTokenPrices } from '@/services'
-import { useTokenStore, Token } from '@/stores/tokens'
+import { useTokenStore } from '@/stores/tokens'
+import { Token } from '@/models/types'
 
 const useTokens = () => {
   const { tokens, isLoading, error, setTokens, setLoading, setError } = useTokenStore()

@@ -1,15 +1,7 @@
 import { useState, useMemo } from 'react'
-import { Token } from '@/stores/tokens'
+import { Token } from '@/models/types'
 import { useTheme } from '@/provider/themeProvider'
-
-interface TokenSelectModalProps {
-  isOpen: boolean
-  onClose: () => void
-  tokens: Token[]
-  onSelectToken: (token: Token) => void
-  disabledToken?: Token | null
-  title: string
-}
+import { TokenSelectModalProps } from '@/models/types'
 
 export const TokenSelectModal = ({
   isOpen,
